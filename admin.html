@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADMIN DASHBOARD | S.J CLOTHING</title>
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#0a0a0a',
+              dark: '#121212',
+              lightDark: '#1a1a1a',
+              accent: '#ccff00', // Neon Active Lime
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Oswald', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-black text-white selection:bg-brand-accent selection:text-black min-h-screen flex flex-col">
+
+  <!-- ================= ADMIN LOGIN GATE ================= -->
+  <div id="admin-auth-view" class="hidden flex-1 flex items-center justify-center py-20 px-4">
+    <div class="w-full max-w-md border border-white/10 bg-[#0a0a0a] p-8 space-y-6">
+      <div class="text-center space-y-1">
+        <h2 class="text-3xl font-black font-display tracking-widest text-[#ccff00]">S.J CONTROL</h2>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Authorized Administration Access Only</p>
+      </div>
+      
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+        <div class="space-y-2">
+          <label class="text-gray-400">USERNAME</label>
+          <input type="text" id="admin-username" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+        </div>
+        <div class="space-y-2">
+          <label class="text-gray-400">PASSWORD</label>
+          <input type="password" id="admin-password" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+        </div>
+        <button type="submit" class="w-full h-12 bg-[#ccff00] text-black font-black tracking-widest hover:bg-white transition-colors duration-200 shadow-[0_0_15px_rgba(204,255,0,0.2)]">
+          ACCESS DASHBOARD
+        </button>
+      </form>
+      <div class="text-center text-[10px] text-gray-500 font-bold border-t border-white/5 pt-4 uppercase">
+        Credentials: username: <span class="text-white">admin</span> / password: <span class="text-white">admin123</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN ADMIN WORKSPACE ================= -->
+  <div id="admin-workspace-view" class="hidden flex-1 flex flex-col">
+    
+    <!-- Header -->
+    <header class="border-b border-white/10 bg-[#070707] py-5 px-6 sm:px-10 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <span class="text-xl font-black font-display tracking-widest text-white">S.J<span class="text-brand-accent">.</span>CONTROL</span>
+        <span class="text-[10px] bg-brand-accent/20 border border-brand-accent/30 text-brand-accent px-2 py-0.5 font-bold uppercase tracking-widest">ADMIN SECURE</span>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a href="index.html" class="text-xs text-gray-400 hover:text-white transition-colors uppercase font-bold tracking-wider">&larr; Return To Store</a>
+        <button onclick="handleAdminLogout()" class="px-4 py-2 bg-red-950 border border-red-500 hover:bg-red-500 hover:text-black transition-colors font-bold text-xs tracking-widest uppercase">
+          LOG OUT
+        </button>
+      </div>
+    </header>
+
+    <!-- Subheader Menu -->
+    <div class="bg-[#0a0a0a] border-b border-white/5 px-6 sm:px-10 flex overflow-x-auto gap-8">
+      <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="py-4 border-b-2 text-xs font-black uppercase tracking-wider transition-colors duration-150 border-brand-accent text-brand-accent">Overview</button>
+      <button onclick="switchTab('tab-products')" id="btn-tab-products" class="py-4 border-b-2 text-xs font-black uppercase tracking-wider transition-colors duration-150 border-transparent text-gray-400 hover:text-white">Manage Products</button>
+      <button onclick="switchTab('tab-orders')" id="btn-tab-orders" class="py-4 border-b-2 text-xs font-black uppercase tracking-wider transition-colors duration-150 border-transparent text-gray-400 hover:text-white">Customer Orders</button>
+      <button onclick="switchTab('tab-discounts')" id="btn-tab-discounts" class="py-4 border-b-2 text-xs font-black uppercase tracking-wider transition-colors duration-150 border-transparent text-gray-400 hover:text-white">Discount Codes</button>
+    </div>
+
+    <!-- Workspace Body -->
+    <main class="flex-1 p-6 sm:p-10 max-w-7xl mx-auto w-full space-y-10">
+
+      <!-- 1. TAB: OVERVIEW -->
+      <section id="tab-overview" class="tab-pane space-y-10">
+        
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Total Sales Card -->
+          <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-2">
+            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Total Sales Revenue</span>
+            <h3 id="stat-revenue" class="text-3xl font-black text-brand-accent">LKR 0</h3>
+          </div>
+          <!-- Total Orders Card -->
+          <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-2">
+            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Total Orders</span>
+            <h3 id="stat-orders" class="text-3xl font-black text-white">0</h3>
+          </div>
+          <!-- Total Products Card -->
+          <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-2">
+            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Active Products</span>
+            <h3 id="stat-products" class="text-3xl font-black text-white">0</h3>
+          </div>
+          <!-- Total Promo Codes Card -->
+          <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-2">
+            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Active Coupons</span>
+            <h3 id="stat-discounts" class="text-3xl font-black text-white">0</h3>
+          </div>
+        </div>
+
+        <!-- Recent Orders Showcase -->
+        <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-4">
+          <h3 class="text-base font-black font-display tracking-widest uppercase border-b border-white/10 pb-3">RECENT ORDERS</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-semibold uppercase tracking-wider border-collapse">
+              <thead>
+                <tr class="border-b border-white/10 text-gray-500">
+                  <th class="py-3 px-4">Order ID</th>
+                  <th class="py-3 px-4">Customer</th>
+                  <th class="py-3 px-4">Date</th>
+                  <th class="py-3 px-4 text-right">Total Price</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-tbody" class="divide-y divide-white/5">
+                <!-- Dynamically filled -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 2. TAB: MANAGE PRODUCTS -->
+      <section id="tab-products" class="tab-pane hidden space-y-6">
+        
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-black font-display tracking-wider uppercase text-white">PRODUCTS INVENTORY</h3>
+          <button onclick="openProductModal()" class="px-6 py-3 bg-[#ccff00] text-black font-black text-xs tracking-widest uppercase hover:bg-white transition-colors duration-200">
+            ADD NEW PRODUCT
+          </button>
+        </div>
+
+        <div class="border border-white/10 bg-[#0a0a0a] overflow-x-auto">
+          <table class="w-full text-left text-xs font-semibold uppercase tracking-wider border-collapse">
+            <thead>
+              <tr class="border-b border-white/10 text-gray-500">
+                <th class="py-4 px-6">Product Image</th>
+                <th class="py-4 px-6">Product Name</th>
+                <th class="py-4 px-6">Category</th>
+                <th class="py-4 px-6 text-right">Regular Price</th>
+                <th class="py-4 px-6 text-right">Discount Price</th>
+                <th class="py-4 px-6 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody" class="divide-y divide-white/5">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- 3. TAB: CUSTOMER ORDERS -->
+      <section id="tab-orders" class="tab-pane hidden space-y-6">
+        <h3 class="text-lg font-black font-display tracking-wider uppercase text-white">CUSTOMER ORDER REGISTRY</h3>
+
+        <div class="border border-white/10 bg-[#0a0a0a] overflow-x-auto">
+          <table class="w-full text-left text-xs font-semibold uppercase tracking-wider border-collapse">
+            <thead>
+              <tr class="border-b border-white/10 text-gray-500">
+                <th class="py-4 px-6">Order ID</th>
+                <th class="py-4 px-6">Customer & Contact</th>
+                <th class="py-4 px-6">Items Purchased</th>
+                <th class="py-4 px-6 text-right">Total Price</th>
+                <th class="py-4 px-6 text-center">Status</th>
+                <th class="py-4 px-6 text-center">Manage</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody" class="divide-y divide-white/5">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. TAB: DISCOUNT CODES -->
+      <section id="tab-discounts" class="tab-pane hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Codes Table -->
+        <div class="lg:col-span-8 border border-white/10 bg-[#0a0a0a] p-6 space-y-4">
+          <h3 class="text-base font-black font-display tracking-widest uppercase border-b border-white/10 pb-3">ACTIVE PROMO CODES</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-semibold uppercase tracking-wider border-collapse">
+              <thead>
+                <tr class="border-b border-white/10 text-gray-500">
+                  <th class="py-3 px-4">Coupon Code</th>
+                  <th class="py-3 px-4 text-center">Discount Value</th>
+                  <th class="py-3 px-4 text-center">Type</th>
+                  <th class="py-3 px-4 text-center">Delete</th>
+                </tr>
+              </thead>
+              <tbody id="discounts-tbody" class="divide-y divide-white/5">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Create Code Form -->
+        <div class="lg:col-span-4 border border-white/10 bg-[#0a0a0a] p-6 space-y-5">
+          <h3 class="text-base font-black font-display tracking-widest uppercase border-b border-white/10 pb-3">CREATE COUPON</h3>
+          
+          <form onsubmit="handleCreateCoupon(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+            <div class="space-y-2">
+              <label class="text-gray-400">COUPON CODE NAME *</label>
+              <input type="text" id="coupon-code" placeholder="e.g. FIT20" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">DISCOUNT PERCENTAGE (%) *</label>
+              <input type="number" id="coupon-percent" min="0" max="100" value="10" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="flex items-center space-x-3 pt-2">
+              <input type="checkbox" id="coupon-shipping" class="w-4 h-4 bg-neutral-900 border-white/10 text-[#ccff00] focus:ring-0 rounded-none cursor-pointer">
+              <label for="coupon-shipping" class="text-gray-400 cursor-pointer">IS FREE SHIPPING CODE</label>
+            </div>
+            
+            <button type="submit" class="w-full h-11 bg-white text-black font-black tracking-widest hover:bg-brand-accent transition-colors duration-200">
+              CREATE CODE
+            </button>
+          </form>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= PRODUCT ENTRY/EDIT MODAL ================= -->
+  <div id="product-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-2xl border border-white/10 bg-[#0a0a0a] p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex justify-between items-center border-b border-white/10 pb-3">
+        <h3 id="modal-title" class="text-xl font-bold font-display tracking-wider uppercase text-white">ADD NEW PRODUCT</h3>
+        <button onclick="closeProductModal()" class="p-2 text-gray-500 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="product-form" onsubmit="handleProductSubmit(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+        <!-- ID Hidden field -->
+        <input type="hidden" id="prod-id">
+
+        <!-- Title / Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-gray-400">PRODUCT TITLE *</label>
+            <input type="text" id="prod-title" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <div class="space-y-2">
+            <label class="text-gray-400">CATEGORY *</label>
+            <select id="prod-category" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none focus:outline-none focus:border-brand-accent cursor-pointer">
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Prices -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-gray-400">REGULAR PRICE (LKR) *</label>
+            <input type="number" id="prod-price" min="0" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <div class="space-y-2">
+            <label class="text-gray-400">DISCOUNT PRICE (LKR) (OPTIONAL)</label>
+            <input type="number" id="prod-discount" min="0" placeholder="Leave empty if no discount" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none">
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="space-y-2">
+          <label class="text-gray-400">PRODUCT IMAGE URL *</label>
+          <input type="url" id="prod-image" placeholder="https://images.unsplash.com/..." class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+        </div>
+
+        <!-- Sizes checkboxes -->
+        <div class="space-y-2.5">
+          <label class="text-gray-400">AVAILABLE SIZES *</label>
+          <div class="flex items-center gap-6">
+            <label class="flex items-center space-x-2.5 cursor-pointer text-gray-300 hover:text-white">
+              <input type="checkbox" name="prod-sizes" value="S" checked class="w-4 h-4 bg-neutral-900 border-white/10 text-brand-accent focus:ring-0 rounded-none cursor-pointer">
+              <span>S</span>
+            </label>
+            <label class="flex items-center space-x-2.5 cursor-pointer text-gray-300 hover:text-white">
+              <input type="checkbox" name="prod-sizes" value="M" checked class="w-4 h-4 bg-neutral-900 border-white/10 text-brand-accent focus:ring-0 rounded-none cursor-pointer">
+              <span>M</span>
+            </label>
+            <label class="flex items-center space-x-2.5 cursor-pointer text-gray-300 hover:text-white">
+              <input type="checkbox" name="prod-sizes" value="L" checked class="w-4 h-4 bg-neutral-900 border-white/10 text-brand-accent focus:ring-0 rounded-none cursor-pointer">
+              <span>L</span>
+            </label>
+            <label class="flex items-center space-x-2.5 cursor-pointer text-gray-300 hover:text-white">
+              <input type="checkbox" name="prod-sizes" value="XL" checked class="w-4 h-4 bg-neutral-900 border-white/10 text-brand-accent focus:ring-0 rounded-none cursor-pointer">
+              <span>XL</span>
+            </label>
+            <label class="flex items-center space-x-2.5 cursor-pointer text-gray-300 hover:text-white">
+              <input type="checkbox" name="prod-sizes" value="One Size" class="w-4 h-4 bg-neutral-900 border-white/10 text-brand-accent focus:ring-0 rounded-none cursor-pointer">
+              <span>ONE SIZE (ACCESSORIES)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2">
+          <label class="text-gray-400">PRODUCT DESCRIPTION *</label>
+          <textarea id="prod-description" rows="3" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none focus:outline-none focus:border-brand-accent" required></textarea>
+        </div>
+
+        <!-- Fit Details -->
+        <div class="space-y-2">
+          <label class="text-gray-400">FIT DETAILS *</label>
+          <input type="text" id="prod-fit" placeholder="Regular fit. Take your normal size." class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+        </div>
+
+        <!-- Submit CTAs -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button type="button" onclick="closeProductModal()" class="py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs tracking-wider uppercase">
+            Cancel
+          </button>
+          <button type="submit" class="py-3 px-4 bg-[#ccff00] hover:bg-white text-black font-black text-xs tracking-wider uppercase">
+            SAVE PRODUCT
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3 pointer-events-none"></div>
+
+  <!-- Shared Store Script -->
+  <script src="store.js"></script>
+
+  <!-- Page Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderAdminView();
+    });
+
+    // --- VIEW AUTH ---
+    function renderAdminView() {
+      const admin = getAdminSession();
+      const authView = document.getElementById("admin-auth-view");
+      const workspaceView = document.getElementById("admin-workspace-view");
+
+      if (admin) {
+        authView.style.display = "none";
+        workspaceView.style.display = "flex";
+        loadDashboardStats();
+      } else {
+        authView.style.display = "flex";
+        workspaceView.style.display = "none";
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById("admin-username").value.trim();
+      const pass = document.getElementById("admin-password").value;
+
+      const res = loginUser(user, pass);
+      if (res.success && res.role === "admin") {
+        showToast("Access Granted. Welcome Administrator!");
+        renderAdminView();
+      } else {
+        showToast("Invalid credentials or unauthorized.", "error");
+      }
+    }
+
+    function handleAdminLogout() {
+      logoutAdmin();
+      showToast("Admin session terminated.");
+      renderAdminView();
+    }
+
+    // --- TAB TOGGLE ---
+    function switchTab(tabId) {
+      // Hide all panels
+      const panes = document.querySelectorAll(".tab-pane");
+      panes.forEach(pane => pane.classList.add("hidden"));
+
+      // Show selected panel
+      document.getElementById(tabId).classList.remove("hidden");
+
+      // Reset menu button borders
+      const tabs = ["overview", "products", "orders", "discounts"];
+      tabs.forEach(tab => {
+        const btn = document.getElementById(`btn-tab-${tab}`);
+        btn.classList.remove("border-brand-accent", "text-brand-accent");
+        btn.classList.add("border-transparent", "text-gray-400");
+      });
+
+      // Highlight active menu button
+      const activeBtn = document.getElementById(`btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove("border-transparent", "text-gray-400");
+        activeBtn.classList.add("border-brand-accent", "text-brand-accent");
+      }
+
+      // Load specific tab data
+      if (tabId === "tab-overview") loadDashboardStats();
+      if (tabId === "tab-products") loadProductsTable();
+      if (tabId === "tab-orders") loadOrdersTable();
+      if (tabId === "tab-discounts") loadDiscountsTable();
+    }
+
+    // --- DATA LOADERS ---
+    function loadDashboardStats() {
+      const products = getProducts();
+      const orders = getOrders();
+      const discounts = getDiscounts();
+
+      // Calculate total sales revenue (exclude Cancelled)
+      const validOrders = orders.filter(o => o.status !== "Cancelled");
+      const totalRevenue = validOrders.reduce((sum, o) => sum + o.totals.total, 0);
+
+      document.getElementById("stat-revenue").textContent = `LKR ${totalRevenue.toLocaleString()}`;
+      document.getElementById("stat-orders").textContent = orders.length;
+      document.getElementById("stat-products").textContent = products.length;
+      document.getElementById("stat-discounts").textContent = discounts.length;
+
+      // Populate Recent Orders (first 5)
+      const tbody = document.getElementById("recent-orders-tbody");
+      const recent = orders.slice(0, 5);
+
+      if (recent.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-6 text-center text-gray-500 uppercase font-bold">No orders recorded yet.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = recent.map(o => `
+        <tr class="border-b border-white/5 hover:bg-white/5">
+          <td class="py-3.5 px-4 font-bold text-brand-accent">${o.orderId}</td>
+          <td class="py-3.5 px-4 text-white">${o.customer.name}</td>
+          <td class="py-3.5 px-4 text-gray-400 text-[10px]">${o.date}</td>
+          <td class="py-3.5 px-4 text-right text-white font-bold">LKR ${o.totals.total.toLocaleString()}</td>
+          <td class="py-3.5 px-4 text-center">
+            <span class="px-2 py-0.5 text-[9px] font-black uppercase ${o.status === "Delivered" ? "bg-green-950 text-green-400" : o.status === "Shipped" ? "bg-blue-950 text-blue-400" : o.status === "Cancelled" ? "bg-red-950 text-red-400" : "bg-yellow-950 text-yellow-400"}">${o.status}</span>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Load Products Inventory
+    function loadProductsTable() {
+      const tbody = document.getElementById("products-tbody");
+      const products = getProducts();
+
+      if (products.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-gray-500 uppercase font-bold">No products in catalog.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => `
+        <tr class="border-b border-white/5 hover:bg-[#121212] transition-colors">
+          <td class="py-4 px-6">
+            <img src="${p.image}" alt="${p.name}" class="w-12 h-16 object-cover border border-white/10 bg-neutral-900" onerror="this.src='https://via.placeholder.com/150x200?text=Apparel'">
+          </td>
+          <td class="py-4 px-6 text-white font-bold uppercase truncate max-w-[200px]">${p.name}</td>
+          <td class="py-4 px-6 text-gray-400 uppercase font-semibold">${p.category}</td>
+          <td class="py-4 px-6 text-right font-bold">LKR ${p.price.toLocaleString()}</td>
+          <td class="py-4 px-6 text-right font-bold text-brand-accent">${p.isDiscounted ? `LKR ${p.discountPrice.toLocaleString()}` : "None"}</td>
+          <td class="py-4 px-6 text-center space-x-3">
+            <button onclick="editProductPrompt('${p.id}')" class="px-3.5 py-1.5 bg-white text-black hover:bg-[#ccff00] font-black uppercase text-[10px] transition-colors">Edit</button>
+            <button onclick="deleteProductPrompt('${p.id}')" class="px-3.5 py-1.5 bg-red-950 border border-red-500 text-white hover:bg-red-500 hover:text-black font-black uppercase text-[10px] transition-colors">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Load Customer Orders Registry
+    function loadOrdersTable() {
+      const tbody = document.getElementById("orders-tbody");
+      const orders = getOrders();
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-gray-500 uppercase font-bold">No orders recorded yet.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const itemsList = o.items.map(i => `${i.name} (${i.size}) x${i.quantity}`).join("<br>");
+
+        return `
+          <tr class="border-b border-white/5 hover:bg-[#121212] transition-colors align-top">
+            <td class="py-4 px-6 font-bold text-brand-accent pt-5">${o.orderId}</td>
+            <td class="py-4 px-6 text-white pt-5 leading-normal">
+              <span class="font-bold">${o.customer.name}</span><br>
+              <span class="text-gray-400 text-[10px] lowercase">${o.customer.email}</span><br>
+              <span class="text-gray-400 text-[10px]">${o.customer.phone}</span><br>
+              <span class="text-gray-500 text-[10px] italic">${o.customer.address}</span>
+            </td>
+            <td class="py-4 px-6 text-gray-400 pt-5 leading-relaxed text-[11px]">${itemsList}</td>
+            <td class="py-4 px-6 text-right font-black text-white pt-5">LKR ${o.totals.total.toLocaleString()}</td>
+            <td class="py-4 px-6 text-center pt-5">
+              <span class="px-2.5 py-1 text-[9px] font-black uppercase ${o.status === "Delivered" ? "bg-green-950 text-green-400" : o.status === "Shipped" ? "bg-blue-950 text-blue-400" : o.status === "Cancelled" ? "bg-red-950 text-red-400" : "bg-yellow-950 text-yellow-400"}">${o.status}</span>
+            </td>
+            <td class="py-4 px-6 text-center pt-5">
+              <select onchange="handleStatusChange('${o.orderId}', this.value)" class="bg-[#121212] border border-white/10 text-white p-2 font-bold text-[10px] uppercase rounded-none focus:outline-none focus:border-brand-accent cursor-pointer">
+                <option value="Pending" ${o.status === "Pending" ? "selected" : ""}>Pending</option>
+                <option value="Shipped" ${o.status === "Shipped" ? "selected" : ""}>Shipped</option>
+                <option value="Delivered" ${o.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                <option value="Cancelled" ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Load Discounts Promo codes
+    function loadDiscountsTable() {
+      const tbody = document.getElementById("discounts-tbody");
+      const discounts = getDiscounts();
+
+      if (discounts.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="py-6 text-center text-gray-500 uppercase font-bold">No promo coupons created.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = discounts.map(d => `
+        <tr class="border-b border-white/5 hover:bg-white/5">
+          <td class="py-3 px-4 font-bold text-white">${d.code}</td>
+          <td class="py-3 px-4 text-center font-bold text-brand-accent">${d.isFreeShipping ? "FREE" : `${d.discountPercent}%`}</td>
+          <td class="py-3 px-4 text-center text-gray-400">${d.isFreeShipping ? "Free Delivery" : "Cart Markdown"}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="handleDeleteCoupon('${d.code}')" class="text-red-500 hover:text-red-400 transition-colors uppercase font-bold text-[10px] border border-red-500/20 px-2.5 py-1">Remove</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // --- ORDER ACTIONS ---
+    function handleStatusChange(orderId, newStatus) {
+      updateOrderStatus(orderId, newStatus);
+      showToast(`Order ${orderId} marked as ${newStatus}`);
+      loadOrdersTable();
+    }
+
+    // --- COUPON ACTIONS ---
+    function handleCreateCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById("coupon-code").value.trim().toUpperCase();
+      const percent = document.getElementById("coupon-percent").value;
+      const isFree = document.getElementById("coupon-shipping").checked;
+
+      const success = addDiscount(code, percent, isFree);
+      if (success) {
+        showToast(`Promo code ${code} created successfully!`);
+        document.getElementById("coupon-code").value = "";
+        document.getElementById("coupon-percent").value = "10";
+        document.getElementById("coupon-shipping").checked = false;
+        loadDiscountsTable();
+      } else {
+        showToast("Promo code already exists.", "error");
+      }
+    }
+
+    function handleDeleteCoupon(code) {
+      if (confirm(`Are you sure you want to delete promo code: ${code}?`)) {
+        deleteDiscount(code);
+        showToast(`Promo code ${code} deleted.`);
+        loadDiscountsTable();
+      }
+    }
+
+    // --- PRODUCT ACTIONS ---
+    function openProductModal() {
+      document.getElementById("modal-title").textContent = "ADD NEW PRODUCT";
+      document.getElementById("product-form").reset();
+      document.getElementById("prod-id").value = ""; // indicates new product
+      document.getElementById("product-modal").classList.remove("hidden");
+    }
+
+    function closeProductModal() {
+      document.getElementById("product-modal").classList.add("hidden");
+    }
+
+    function editProductPrompt(id) {
+      const p = getProductById(id);
+      if (!p) return;
+
+      document.getElementById("modal-title").textContent = "EDIT PRODUCT";
+      document.getElementById("prod-id").value = p.id;
+      document.getElementById("prod-title").value = p.name;
+      document.getElementById("prod-category").value = p.category;
+      document.getElementById("prod-price").value = p.price;
+      document.getElementById("prod-discount").value = p.isDiscounted ? p.discountPrice : "";
+      document.getElementById("prod-image").value = p.image;
+      document.getElementById("prod-description").value = p.description;
+      document.getElementById("prod-fit").value = p.fit;
+
+      // Select checkboxes
+      const checkboxes = document.getElementsByName("prod-sizes");
+      checkboxes.forEach(cb => {
+        cb.checked = p.sizes.includes(cb.value);
+      });
+
+      document.getElementById("product-modal").classList.remove("hidden");
+    }
+
+    function handleProductSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById("prod-id").value;
+      const name = document.getElementById("prod-title").value.trim();
+      const category = document.getElementById("prod-category").value;
+      const price = Number(document.getElementById("prod-price").value);
+      const discountVal = document.getElementById("prod-discount").value;
+      const image = document.getElementById("prod-image").value.trim();
+      const description = document.getElementById("prod-description").value.trim();
+      const fit = document.getElementById("prod-fit").value.trim();
+
+      // Retrieve checked sizes
+      const checkboxes = document.getElementsByName("prod-sizes");
+      const sizes = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) sizes.push(cb.value);
+      });
+
+      if (sizes.length === 0) {
+        showToast("Please select at least one available size.", "error");
+        return;
+      }
+
+      const isDiscounted = discountVal !== "" && Number(discountVal) > 0;
+      const discountPrice = isDiscounted ? Number(discountVal) : null;
+
+      const productObj = {
+        id,
+        name,
+        category,
+        price,
+        originalPrice: price,
+        discountPrice,
+        isDiscounted,
+        sizes,
+        image,
+        description,
+        fit,
+        inStock: true
+      };
+
+      if (id === "") {
+        // Create new
+        addProduct(productObj);
+        showToast("Product added to catalog!");
+      } else {
+        // Edit existing
+        updateProduct(productObj);
+        showToast("Product details updated!");
+      }
+
+      closeProductModal();
+      loadProductsTable();
+    }
+
+    function deleteProductPrompt(id) {
+      const p = getProductById(id);
+      if (!p) return;
+
+      if (confirm(`Are you sure you want to delete "${p.name}"? This will remove it from all storefront catalog pages.`)) {
+        deleteProduct(id);
+        showToast("Product deleted successfully.");
+        loadProductsTable();
+      }
+    }
+
+    // --- SYSTEM TOASTS FOR ADMIN ---
+    function showToast(message, type = "success") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+
+      const toastId = "toast_" + Date.now();
+      const bgClass = type === "success" ? "bg-neutral-900 border-l-4 border-[#ccff00] text-white" : "bg-red-950 border-l-4 border-red-500 text-white";
+      const icon = type === "success" 
+        ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#ccff00] mr-3" viewBox="0 0 20 20" fill="currentColor">
+             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+           </svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+           </svg>`;
+
+      const toastHTML = `
+        <div id="${toastId}" class="flex items-center p-4 min-w-[300px] shadow-2xl rounded-none transition-all duration-300 translate-y-10 opacity-0 ${bgClass} border border-white/5 pointer-events-auto">
+          ${icon}
+          <div class="text-sm font-semibold uppercase tracking-wider">${message}</div>
+        </div>
+      `;
+
+      container.insertAdjacentHTML("beforeend", toastHTML);
+      const toast = document.getElementById(toastId);
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-10", "opacity-0");
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add("translate-y-[-10px]", "opacity-0");
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

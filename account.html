@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MY ACCOUNT | S.J CLOTHING</title>
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#0a0a0a',
+              dark: '#121212',
+              lightDark: '#1a1a1a',
+              accent: '#ccff00', // Neon Active Lime
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Oswald', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-black text-white selection:bg-brand-accent selection:text-black">
+
+  <!-- 1. Header -->
+  <header class="sticky top-0 z-40 w-full border-b border-white/5 glass-panel">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+      <!-- Mobile Toggle -->
+      <button id="mobile-menu-toggle" class="lg:hidden text-white hover:text-brand-accent transition-colors p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <a href="index.html" class="flex-shrink-0 flex items-center">
+        <span class="text-2xl font-black font-display tracking-widest text-white hover:text-brand-accent transition-colors duration-200">S.J<span class="text-brand-accent">.</span>CLOTHING</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex space-x-8 text-sm font-bold uppercase tracking-wider">
+        <a href="shop.html" class="text-white hover:text-brand-accent transition-colors duration-200">Shop All</a>
+        <a href="shop.html?category=Men" class="text-white hover:text-brand-accent transition-colors duration-200">Men</a>
+        <a href="shop.html?category=Women" class="text-white hover:text-brand-accent transition-colors duration-200">Women</a>
+        <a href="shop.html?category=Accessories" class="text-white hover:text-brand-accent transition-colors duration-200">Accessories</a>
+      </nav>
+
+      <!-- Nav Icons -->
+      <div class="flex items-center space-x-6">
+        <a href="account.html" class="account-link text-brand-accent border-b-2 border-brand-accent pb-1" title="Account">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </a>
+
+        <button class="cart-trigger relative text-white hover:text-brand-accent transition-colors duration-200" title="Shopping Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="cart-count-badge hidden absolute -top-2 -right-2 bg-brand-accent text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-black">0</span>
+        </button>
+
+        <a href="admin.html" class="text-white/20 hover:text-brand-accent transition-colors duration-200 text-xs font-semibold tracking-widest uppercase border border-white/10 px-2.5 py-1">
+          Admin
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- ================= LOGIN / REGISTER GATE ================= -->
+    <div id="auth-gate-view" class="hidden grid grid-cols-1 md:grid-cols-2 gap-12 items-start max-w-5xl mx-auto">
+      
+      <!-- Login Section -->
+      <div class="border border-white/10 bg-[#0a0a0a] p-8 space-y-6">
+        <h2 class="text-2xl font-bold font-display uppercase tracking-widest border-b border-white/10 pb-3">CUSTOMER LOGIN</h2>
+        <form onsubmit="handleLogin(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+          <div class="space-y-2">
+            <label class="text-gray-400">USERNAME OR EMAIL</label>
+            <input type="text" id="login-username" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <div class="space-y-2">
+            <label class="text-gray-400">PASSWORD</label>
+            <input type="password" id="login-password" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <button type="submit" class="w-full h-12 bg-white text-black font-black tracking-widest hover:bg-brand-accent transition-colors duration-200">
+            LOG IN
+          </button>
+        </form>
+        <div class="text-center pt-2">
+          <p class="text-[10px] text-gray-500 uppercase tracking-widest">Default Demo Customer: <span class="text-white font-bold">customer / customer123</span></p>
+        </div>
+      </div>
+
+      <!-- Register Section -->
+      <div class="border border-white/10 bg-[#0a0a0a] p-8 space-y-6">
+        <h2 class="text-2xl font-bold font-display uppercase tracking-widest border-b border-white/10 pb-3">CREATE ACCOUNT</h2>
+        <form onsubmit="handleRegister(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+          <div class="space-y-2">
+            <label class="text-gray-400">FULL NAME *</label>
+            <input type="text" id="reg-name" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-gray-400">USERNAME *</label>
+              <input type="text" id="reg-username" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">EMAIL *</label>
+              <input type="email" id="reg-email" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-gray-400">PHONE NUMBER *</label>
+              <input type="tel" id="reg-phone" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">PASSWORD *</label>
+              <input type="password" id="reg-password" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-gray-400">DELIVERY ADDRESS *</label>
+            <input type="text" id="reg-address" placeholder="e.g. 123 Galle Road, Colombo 03" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+          </div>
+          <button type="submit" class="w-full h-12 bg-brand-accent text-black font-black tracking-widest hover:bg-white transition-colors duration-200">
+            REGISTER ACCOUNT
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- ================= CUSTOMER DASHBOARD ================= -->
+    <div id="dashboard-view" class="hidden space-y-10">
+      
+      <!-- Top Title Panel -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#0a0a0a] border border-white/10 p-8">
+        <div>
+          <p class="text-brand-accent text-xs font-black tracking-[0.2em] uppercase">CUSTOMER DASHBOARD</p>
+          <h2 id="welcome-title" class="text-2xl md:text-3xl font-black font-display tracking-widest uppercase text-white mt-1">WELCOME BACK, USER</h2>
+        </div>
+        <button onclick="handleLogout()" class="px-6 py-3 bg-red-950 border border-red-500 hover:bg-red-500 hover:text-black transition-colors font-bold text-xs tracking-widest uppercase">
+          LOG OUT
+        </button>
+      </div>
+
+      <!-- Main Columns -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Profile Details / Edit -->
+        <div class="lg:col-span-4 border border-white/10 bg-[#0a0a0a] p-8 space-y-6">
+          <h3 class="text-lg font-black font-display tracking-wider border-b border-white/10 pb-3 text-white">MY PROFILE</h3>
+          
+          <form id="profile-form" onsubmit="handleUpdateProfile(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+            <div class="space-y-2">
+              <label class="text-gray-400">FULL NAME</label>
+              <input type="text" id="prof-name" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">EMAIL ADDRESS</label>
+              <input type="email" id="prof-email" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none opacity-50 cursor-not-allowed" readonly>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">PHONE NUMBER</label>
+              <input type="tel" id="prof-phone" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-gray-400">DELIVERY ADDRESS</label>
+              <textarea id="prof-address" rows="3" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none focus:outline-none focus:border-brand-accent" required></textarea>
+            </div>
+            <button type="submit" class="w-full h-11 bg-white text-black hover:bg-brand-accent transition-colors font-black tracking-widest text-xs">
+              SAVE CHANGES
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Order History -->
+        <div class="lg:col-span-8 border border-white/10 bg-[#0a0a0a] p-8 space-y-6">
+          <h3 class="text-lg font-black font-display tracking-wider border-b border-white/10 pb-3 text-white">ORDER HISTORY</h3>
+          
+          <div id="orders-list-container" class="space-y-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Store & UI Scripts -->
+  <script src="store.js"></script>
+  <script src="ui.js"></script>
+
+  <!-- Page Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderView();
+    });
+
+    function renderView() {
+      const user = getCurrentUser();
+      const authView = document.getElementById("auth-gate-view");
+      const dashView = document.getElementById("dashboard-view");
+
+      if (user) {
+        authView.style.display = "none";
+        dashView.style.display = "block";
+        loadDashboard(user);
+      } else {
+        authView.style.display = "grid";
+        dashView.style.display = "none";
+      }
+    }
+
+    // --- AUTH ACTIONS ---
+    function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("login-username").value.trim();
+      const pass = document.getElementById("login-password").value;
+
+      const res = loginUser(username, pass);
+      if (res.success) {
+        showToast("Logged in successfully!");
+        if (res.role === "admin") {
+          window.location.href = "admin.html";
+        } else {
+          renderView();
+        }
+      } else {
+        showToast(res.message, "error");
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById("reg-name").value.trim();
+      const username = document.getElementById("reg-username").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const phone = document.getElementById("reg-phone").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const address = document.getElementById("reg-address").value.trim();
+
+      const userObj = { name, username, email, phone, password, address };
+      const res = registerUser(userObj);
+
+      if (res.success) {
+        showToast("Registered successfully! Logging in...");
+        loginUser(username, password);
+        renderView();
+      } else {
+        showToast(res.message, "error");
+      }
+    }
+
+    function handleLogout() {
+      logoutUser();
+      showToast("Logged out successfully.");
+      renderView();
+    }
+
+    // --- DASHBOARD ACTIONS ---
+    function loadDashboard(user) {
+      document.getElementById("welcome-title").textContent = `WELCOME BACK, ${user.name}`;
+      
+      // Load Profile Fields
+      document.getElementById("prof-name").value = user.name;
+      document.getElementById("prof-email").value = user.email;
+      document.getElementById("prof-phone").value = user.phone;
+      document.getElementById("prof-address").value = user.address;
+
+      // Render Orders
+      renderCustomerOrders(user.email);
+    }
+
+    function handleUpdateProfile(e) {
+      e.preventDefault();
+      const name = document.getElementById("prof-name").value.trim();
+      const phone = document.getElementById("prof-phone").value.trim();
+      const address = document.getElementById("prof-address").value.trim();
+
+      const user = getCurrentUser();
+      user.name = name;
+      user.phone = phone;
+      user.address = address;
+
+      // Save user
+      localStorage.setItem("sj_current_user", JSON.stringify(user));
+      
+      // Update global users list
+      let users = getUsers();
+      users = users.map(u => u.email === user.email ? user : u);
+      localStorage.setItem("sj_users", JSON.stringify(users));
+
+      showToast("Profile details updated!");
+      loadDashboard(user);
+    }
+
+    function renderCustomerOrders(email) {
+      const container = document.getElementById("orders-list-container");
+      const orders = getOrders();
+      // Filter orders by email
+      const custOrders = orders.filter(o => o.customer.email.toLowerCase() === email.toLowerCase());
+
+      if (custOrders.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-gray-500 font-bold uppercase border border-dashed border-white/5 bg-black/50">
+            You haven't placed any orders yet.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = custOrders.map(order => {
+        let badgeColor = "bg-yellow-950 text-yellow-400 border border-yellow-800/30";
+        if (order.status === "Shipped") {
+          badgeColor = "bg-blue-950 text-blue-400 border border-blue-800/30";
+        } else if (order.status === "Delivered") {
+          badgeColor = "bg-green-950 text-green-400 border border-green-800/30";
+        } else if (order.status === "Cancelled") {
+          badgeColor = "bg-red-950 text-red-400 border border-red-800/30";
+        }
+
+        const itemsHTML = order.items.map(item => `
+          <div class="flex justify-between items-center text-xs text-gray-400 font-semibold border-b border-white/5 pb-2 last:border-0 last:pb-0">
+            <span>${item.name} (${item.size}) <span class="text-white">x${item.quantity}</span></span>
+            <span>LKR ${item.subtotal.toLocaleString()}</span>
+          </div>
+        `).join("");
+
+        return `
+          <div class="border border-white/5 bg-[#121212] p-6 space-y-4">
+            
+            <!-- Heading -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div>
+                <span class="text-xs text-gray-500 font-black tracking-wider uppercase">${order.date}</span>
+                <h4 class="text-white font-bold font-display uppercase mt-0.5 tracking-wider">ORDER ID: <span class="text-brand-accent">${order.orderId}</span></h4>
+              </div>
+              <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider ${badgeColor}">${order.status}</span>
+            </div>
+            
+            <hr class="border-white/5">
+
+            <!-- Products List Accordion -->
+            <div class="space-y-3.5">
+              <p class="text-[10px] text-gray-500 font-black tracking-widest uppercase">ITEMS ORDERED</p>
+              <div class="space-y-2.5">
+                ${itemsHTML}
+              </div>
+            </div>
+
+            <hr class="border-white/5">
+
+            <!-- Sub/Total -->
+            <div class="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-400">
+              <div>
+                <span class="block">Payment: <span class="text-white">${order.customer.paymentMethod}</span></span>
+                ${order.promoCode !== "None" ? `<span class="block text-green-400">Applied Code: ${order.promoCode}</span>` : ""}
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-gray-500">Total Price</span>
+                <span class="block text-brand-accent text-sm font-black">LKR ${order.totals.total.toLocaleString()}</span>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join("");
+    }
+  </script>
+</body>
+</html>

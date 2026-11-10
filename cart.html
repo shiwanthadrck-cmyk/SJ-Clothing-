@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHOPPING CART | S.J CLOTHING</title>
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#0a0a0a',
+              dark: '#121212',
+              lightDark: '#1a1a1a',
+              accent: '#ccff00', // Neon Active Lime
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Oswald', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-black text-white selection:bg-brand-accent selection:text-black">
+
+  <!-- 1. Header -->
+  <header class="sticky top-0 z-40 w-full border-b border-white/5 glass-panel">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+      <!-- Mobile Toggle -->
+      <button id="mobile-menu-toggle" class="lg:hidden text-white hover:text-brand-accent transition-colors p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <a href="index.html" class="flex-shrink-0 flex items-center">
+        <span class="text-2xl font-black font-display tracking-widest text-white hover:text-brand-accent transition-colors duration-200">S.J<span class="text-brand-accent">.</span>CLOTHING</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex space-x-8 text-sm font-bold uppercase tracking-wider">
+        <a href="shop.html" class="text-white hover:text-brand-accent transition-colors duration-200">Shop All</a>
+        <a href="shop.html?category=Men" class="text-white hover:text-brand-accent transition-colors duration-200">Men</a>
+        <a href="shop.html?category=Women" class="text-white hover:text-brand-accent transition-colors duration-200">Women</a>
+        <a href="shop.html?category=Accessories" class="text-white hover:text-brand-accent transition-colors duration-200">Accessories</a>
+      </nav>
+
+      <!-- Nav Icons -->
+      <div class="flex items-center space-x-6">
+        <a href="account.html" class="account-link text-white hover:text-brand-accent transition-colors duration-200" title="Account">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </a>
+
+        <button class="cart-trigger relative text-white hover:text-brand-accent transition-colors duration-200" title="Shopping Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="cart-count-badge hidden absolute -top-2 -right-2 bg-brand-accent text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-black">0</span>
+        </button>
+
+        <a href="admin.html" class="text-white/20 hover:text-brand-accent transition-colors duration-200 text-xs font-semibold tracking-widest uppercase border border-white/10 px-2.5 py-1">
+          Admin
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Title -->
+    <h1 class="text-3xl md:text-5xl font-black font-display tracking-wider uppercase mb-8">SHOPPING CART</h1>
+
+    <!-- 1. Cart Empty Screen -->
+    <div id="cart-empty-view" class="hidden text-center py-20 border border-white/5 bg-[#0a0a0a]">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto stroke-1 text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      </svg>
+      <h2 class="text-2xl font-bold font-display uppercase tracking-widest">YOUR CART IS EMPTY</h2>
+      <p class="text-sm text-gray-400 mt-2">Looks like you haven't added anything to your cart yet.</p>
+      <a href="shop.html" class="mt-6 inline-block px-8 py-3 bg-brand-accent text-black font-extrabold text-xs tracking-widest uppercase hover:bg-white transition-colors">START SHOPPING</a>
+    </div>
+
+    <!-- 2. Cart Order Success Screen -->
+    <div id="checkout-success-view" class="hidden max-w-2xl mx-auto text-center py-16 border border-white/10 bg-[#0f0f0f] px-6 md:px-12 space-y-6">
+      <div class="w-16 h-16 bg-brand-accent/20 rounded-full flex items-center justify-center mx-auto text-brand-accent">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div class="space-y-2">
+        <h2 class="text-3xl font-bold font-display tracking-widest text-white uppercase">ORDER PLACED SUCCESSFULLY!</h2>
+        <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Thank you for shopping with S.J Clothing</p>
+      </div>
+      <div class="bg-black/50 p-6 border border-white/5 text-left space-y-4 text-sm font-semibold uppercase tracking-wider">
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-gray-400 text-xs">Order ID</span>
+          <span id="receipt-order-id" class="text-brand-accent font-black">SJ123456</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-gray-400 text-xs">Customer Name</span>
+          <span id="receipt-name">John Doe</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-gray-400 text-xs">Delivery Address</span>
+          <span id="receipt-address" class="text-right truncate max-w-[250px]">Galle Road</span>
+        </div>
+        <div class="flex justify-between text-base pt-2">
+          <span class="text-white font-bold">Total Paid</span>
+          <span id="receipt-total" class="text-[#ccff00] font-black">LKR 0</span>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 leading-relaxed max-w-md mx-auto">
+        Your order has been recorded. Our team will verify your details and package your drops. You can monitor this order from your profile dashboard.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
+        <a href="shop.html" class="px-8 py-3 bg-white text-black hover:bg-brand-accent font-extrabold text-xs tracking-wider uppercase transition-colors">CONTINUE SHOPPING</a>
+        <a href="account.html" class="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-extrabold text-xs tracking-wider uppercase transition-colors">VIEW YOUR PROFILE</a>
+      </div>
+    </div>
+
+    <!-- 3. Checkout Workstation -->
+    <div id="cart-active-view" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      
+      <!-- Left Column: Item Table / Cart Form -->
+      <div class="lg:col-span-8 space-y-8">
+        
+        <!-- Cart Table -->
+        <div class="border border-white/10 bg-[#0a0a0a] overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-white/10 text-xs font-black uppercase tracking-wider text-gray-500">
+                <th class="p-6">Product</th>
+                <th class="p-6 text-center">Quantity</th>
+                <th class="p-6 text-right">Price</th>
+                <th class="p-6 text-right">Total</th>
+                <th class="p-6 text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody id="cart-table-body" class="divide-y divide-white/5 text-sm uppercase font-semibold">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Promo Code Section -->
+        <div class="border border-white/10 bg-[#0a0a0a] p-6">
+          <h3 class="text-sm font-black font-display tracking-widest uppercase mb-4">HAVE A PROMO CODE?</h3>
+          <div class="flex gap-4">
+            <input type="text" id="promo-input" placeholder="ENTER CODE" class="flex-1 py-3 px-4 bg-[#121212] border border-white/10 text-white font-bold text-xs uppercase rounded-none focus:outline-none focus:border-brand-accent">
+            <button onclick="applyPromo()" class="px-6 py-3 bg-white text-black font-extrabold text-xs tracking-widest uppercase hover:bg-brand-accent transition-colors">APPLY</button>
+          </div>
+          <div id="promo-message" class="text-xs mt-3 uppercase tracking-wider font-bold"></div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Summary / Checkout Address Info -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- Summary Box -->
+        <div class="border border-white/10 bg-[#0a0a0a] p-6 space-y-5">
+          <h3 class="text-lg font-black font-display tracking-wider uppercase border-b border-white/10 pb-3">ORDER SUMMARY</h3>
+          
+          <div class="space-y-3 text-xs font-bold uppercase tracking-wider text-gray-400">
+            <div class="flex justify-between">
+              <span>Subtotal</span>
+              <span id="summary-subtotal" class="text-white">LKR 0.00</span>
+            </div>
+            <div id="summary-discount-row" class="flex justify-between hidden text-green-400">
+              <span>Discount</span>
+              <span id="summary-discount">- LKR 0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Delivery Cost</span>
+              <span id="summary-shipping" class="text-white">LKR 0.00</span>
+            </div>
+          </div>
+          
+          <hr class="border-white/10">
+          
+          <div class="flex justify-between text-sm font-bold uppercase tracking-wider text-white">
+            <span>TOTAL PRICE</span>
+            <span id="summary-total" class="text-brand-accent text-lg font-black">LKR 0.00</span>
+          </div>
+        </div>
+
+        <!-- Checkout Form Box -->
+        <div class="border border-white/10 bg-[#0c0c0c] p-6 space-y-5">
+          <h3 class="text-lg font-black font-display tracking-wider uppercase border-b border-white/10 pb-3">DELIVERY DETAILS</h3>
+          
+          <form id="checkout-form" onsubmit="handlePlaceOrder(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider">
+            <!-- Full Name -->
+            <div class="space-y-2">
+              <label class="text-gray-400">FULL NAME *</label>
+              <input type="text" id="cust-name" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <!-- Email -->
+            <div class="space-y-2">
+              <label class="text-gray-400">EMAIL ADDRESS *</label>
+              <input type="email" id="cust-email" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <!-- Phone -->
+            <div class="space-y-2">
+              <label class="text-gray-400">PHONE NUMBER *</label>
+              <input type="tel" id="cust-phone" placeholder="e.g., 0771234567" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <!-- Delivery Address -->
+            <div class="space-y-2">
+              <label class="text-gray-400">DELIVERY ADDRESS *</label>
+              <textarea id="cust-address" rows="3" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none focus:outline-none focus:border-brand-accent" required></textarea>
+            </div>
+            <!-- City -->
+            <div class="space-y-2">
+              <label class="text-gray-400">CITY *</label>
+              <input type="text" id="cust-city" class="w-full py-3 px-4 bg-[#121212] border border-white/10 text-white rounded-none" required>
+            </div>
+            <!-- Payment Option -->
+            <div class="space-y-2 pt-2">
+              <label class="text-gray-400">PAYMENT METHOD</label>
+              <div class="grid grid-cols-2 gap-3 pt-2" id="payment-options">
+                <label id="lbl-COD" class="flex items-center justify-center p-3 border border-brand-accent bg-brand-accent/10 cursor-pointer select-none text-center text-[10px] text-white transition-all duration-200">
+                  <input type="radio" name="payment-method" value="COD" checked class="hidden">
+                  <span>CASH ON DELIVERY</span>
+                </label>
+                <label id="lbl-CARD" class="flex items-center justify-center p-3 border border-white/10 bg-[#121212] cursor-pointer hover:border-brand-accent select-none text-center text-[10px] text-white transition-all duration-200">
+                  <input type="radio" name="payment-method" value="CARD" class="hidden">
+                  <span>CARD PAYMENT (MOCK)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit CTA -->
+            <button type="submit" class="w-full h-14 bg-brand-accent text-black font-black text-sm tracking-widest uppercase hover:bg-white glow-btn transition-all duration-300 mt-4">
+              PLACE ORDER
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Store & UI Scripts -->
+  <script src="store.js"></script>
+  <script src="ui.js"></script>
+
+  <!-- Page Logic -->
+  <script>
+    let activePromo = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCartTable();
+      fillUserInfo();
+
+      // Listen for drawer changes to sync checkout values
+      window.addEventListener("sj_cart_updated", renderCartTable);
+
+      // Fix 4: Payment radio visual state feedback
+      document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+        radio.addEventListener("change", () => {
+          document.querySelectorAll('input[name="payment-method"]').forEach(r => {
+            const lbl = document.getElementById("lbl-" + r.value);
+            if (lbl) {
+              lbl.classList.remove("border-brand-accent", "bg-brand-accent/10");
+              lbl.classList.add("border-white/10", "bg-[#121212]");
+            }
+          });
+          const activeLbl = document.getElementById("lbl-" + radio.value);
+          if (activeLbl) {
+            activeLbl.classList.remove("border-white/10", "bg-[#121212]");
+            activeLbl.classList.add("border-brand-accent", "bg-brand-accent/10");
+          }
+        });
+      });
+    });
+
+    function renderCartTable() {
+      const cart = getCart();
+      const activeView = document.getElementById("cart-active-view");
+      const emptyView = document.getElementById("cart-empty-view");
+      const successView = document.getElementById("checkout-success-view");
+
+      // If success view is visible, don't show cart options
+      if (!successView.classList.contains("hidden")) {
+        return;
+      }
+
+      if (cart.length === 0) {
+        activeView.classList.add("hidden");
+        emptyView.classList.remove("hidden");
+        return;
+      }
+
+      emptyView.classList.add("hidden");
+      activeView.classList.remove("hidden");
+
+      const tbody = document.getElementById("cart-table-body");
+      const items = getCartDetails();
+      const totals = getCartTotals(activePromo);
+
+      // Populate Items Table
+      tbody.innerHTML = items.map(item => `
+        <tr class="align-middle">
+          <!-- Product Meta -->
+          <td class="p-6 flex items-center space-x-4 min-w-[280px]">
+            <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover border border-white/10 bg-neutral-900" onerror="this.src='https://via.placeholder.com/150x200?text=Apparel'">
+            <div>
+              <h4 class="font-bold text-white uppercase text-sm leading-tight">${item.name}</h4>
+              <p class="text-xs text-gray-500 mt-1">Size: <span class="text-brand-accent font-black">${item.size}</span></p>
+            </div>
+          </td>
+          <!-- Quantity Controls -->
+          <td class="p-6 text-center">
+            <div class="inline-flex items-center border border-white/10 rounded-none w-24">
+              <button onclick="updateCartQuantity(${item.index}, ${item.quantity - 1})" class="w-8 h-8 text-gray-400 hover:text-white flex items-center justify-center font-bold">-</button>
+              <span class="w-8 text-center text-xs font-bold text-white">${item.quantity}</span>
+              <button onclick="updateCartQuantity(${item.index}, ${item.quantity + 1})" class="w-8 h-8 text-gray-400 hover:text-white flex items-center justify-center font-bold">+</button>
+            </div>
+          </td>
+          <!-- Price -->
+          <td class="p-6 text-right font-bold text-white text-sm">
+            LKR ${item.price.toLocaleString()}
+          </td>
+          <!-- Subtotal -->
+          <td class="p-6 text-right font-black text-brand-accent text-sm">
+            LKR ${item.subtotal.toLocaleString()}
+          </td>
+          <!-- Delete -->
+          <td class="p-6 text-center">
+            <button onclick="removeFromCart(${item.index})" class="text-gray-500 hover:text-red-500 transition-colors p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+
+      // Update Summary
+      document.getElementById("summary-subtotal").textContent = `LKR ${totals.subtotal.toLocaleString()}`;
+      
+      const discountRow = document.getElementById("summary-discount-row");
+      if (totals.discount > 0) {
+        document.getElementById("summary-discount").textContent = `- LKR ${totals.discount.toLocaleString()}`;
+        discountRow.classList.remove("hidden");
+      } else {
+        discountRow.classList.add("hidden");
+      }
+
+      document.getElementById("summary-shipping").textContent = totals.shipping === 0 
+        ? "FREE" 
+        : `LKR ${totals.shipping.toLocaleString()}`;
+
+      document.getElementById("summary-total").textContent = `LKR ${totals.total.toLocaleString()}`;
+    }
+
+    // Auto-fill logged-in customer info if available
+    function fillUserInfo() {
+      const user = getCurrentUser();
+      if (user) {
+        document.getElementById("cust-name").value = user.name || "";
+        document.getElementById("cust-email").value = user.email || "";
+        document.getElementById("cust-phone").value = user.phone || "";
+        document.getElementById("cust-address").value = user.address || "";
+        // Extract city from address if contains comma, otherwise leave blank
+        if (user.address && user.address.includes(",")) {
+          const parts = user.address.split(",");
+          document.getElementById("cust-city").value = parts[parts.length - 1].trim();
+        }
+      }
+    }
+
+    function applyPromo() {
+      const promoInput = document.getElementById("promo-input");
+      const msg = document.getElementById("promo-message");
+      const code = promoInput.value.trim().toUpperCase();
+
+      if (!code) {
+        msg.textContent = "Please enter a code.";
+        msg.className = "text-xs mt-3 uppercase tracking-wider font-bold text-red-500";
+        return;
+      }
+
+      const activeDiscounts = getDiscounts();
+      const match = activeDiscounts.find(d => d.code === code);
+
+      if (match) {
+        activePromo = code;
+        msg.textContent = match.isFreeShipping 
+          ? "FREE SHIPPING CODE APPLIED!"
+          : `${match.discountPercent}% DISCOUNT CODE APPLIED!`;
+        msg.className = "text-xs mt-3 uppercase tracking-wider font-bold text-brand-accent";
+        renderCartTable();
+      } else {
+        activePromo = null;
+        msg.textContent = "INVALID OR EXPIRED PROMO CODE.";
+        msg.className = "text-xs mt-3 uppercase tracking-wider font-bold text-red-500";
+        renderCartTable();
+      }
+    }
+
+    function handlePlaceOrder(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("cust-name").value.trim();
+      const email = document.getElementById("cust-email").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      const city = document.getElementById("cust-city").value.trim();
+      
+      const paymentRadios = document.getElementsByName("payment-method");
+      let payment = "COD";
+      for (let r of paymentRadios) {
+        if (r.checked) {
+          payment = r.value;
+          break;
+        }
+      }
+
+      const customerDetails = {
+        name,
+        email,
+        phone,
+        address: `${address}, ${city}`,
+        paymentMethod: payment
+      };
+
+      // Create Order
+      const newOrder = createOrder(customerDetails, activePromo);
+
+      if (newOrder) {
+        // Show success screen
+        document.getElementById("cart-active-view").classList.add("hidden");
+        document.getElementById("checkout-success-view").classList.remove("hidden");
+        
+        // Populate receipt
+        document.getElementById("receipt-order-id").textContent = newOrder.orderId;
+        document.getElementById("receipt-name").textContent = newOrder.customer.name;
+        document.getElementById("receipt-address").textContent = newOrder.customer.address;
+        document.getElementById("receipt-total").textContent = `LKR ${newOrder.totals.total.toLocaleString()}`;
+        
+        showToast("Order placed successfully!");
+      } else {
+        showToast("Checkout failed. Cart is empty.", "error");
+      }
+    }
+  </script>
+</body>
+</html>
